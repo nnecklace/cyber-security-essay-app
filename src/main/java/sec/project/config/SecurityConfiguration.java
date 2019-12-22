@@ -23,8 +23,9 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        // no real security at the moment
         http.authorizeRequests().anyRequest().permitAll();
+    
+        http.csrf().disable();
 
         http.addFilterAfter(new Filter() {
             @Override
@@ -34,23 +35,27 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 HttpServletRequest req = (HttpServletRequest) request;
                 HttpServletResponse res = (HttpServletResponse) response;
                 String userId = req.getRequestURI().replaceAll("\\D", "");
-                if (req.getRequestURI().startsWith("/todo") && !req.getRequestURI().contains("update")) {
-                    Cookie[] cookies = req.getCookies();
-                    if (cookies == null) {
-                        res.sendError(HttpServletResponse.SC_FORBIDDEN);
-                    } else {
-                        boolean found = false;
-                        for (Cookie c : cookies) {
-                            if ("user".equals(c.getName()) && c.getValue().equals(userId)) {
-                                found = true;
+                if (!req.getRequestURI().contains("update")) {
+                    if (req.getRequestURI().startsWith("/todo")) {
+                        Cookie[] cookies = req.getCookies();
+                        if (cookies == null) {
+                            res.sendError(HttpServletResponse.SC_FORBIDDEN);
+                        } else {
+                            boolean found = false;
+                            for (Cookie c : cookies) {
+                                if ("user".equals(c.getName()) && c.getValue().equals(userId)) {
+                                    found = true;
+                                }
+                            }
+
+                            if (!found) {
+                                res.sendError(HttpServletResponse.SC_FORBIDDEN);
+                            } else  {
+                                chain.doFilter(request, response);
                             }
                         }
-
-                        if (!found) {
-                            res.sendError(HttpServletResponse.SC_FORBIDDEN);
-                        } else  {
-                            chain.doFilter(request, response);
-                        }
+                    } else {
+                        chain.doFilter(request, response);
                     }
                 } else {
                     chain.doFilter(request, response);

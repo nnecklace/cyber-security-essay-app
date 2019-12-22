@@ -35,7 +35,6 @@ public class TodoController {
                 return todo;
             }
         });
-        System.out.println(todos);
         model.addAttribute("todos", todos);
         model.addAttribute("userid", userid);
 
