@@ -1,6 +1,8 @@
 package sec.project.config;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -34,7 +36,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
                 HttpServletRequest req = (HttpServletRequest) request;
                 HttpServletResponse res = (HttpServletResponse) response;
-                String userId = req.getRequestURI().replaceAll("\\D", "");
+                String userId = null;
+                Pattern p = Pattern.compile("[0-9]+");
+                Matcher m = p.matcher(req.getRequestURI());
+                while (m.find()) {
+                    userId = m.group();
+                    break;
+                }
+                System.out.println("Filter "+userId);
                 if (!req.getRequestURI().contains("update")) {
                     if (req.getRequestURI().startsWith("/todo")) {
                         Cookie[] cookies = req.getCookies();

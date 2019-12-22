@@ -23,6 +23,7 @@ public class TodoController {
 
     @RequestMapping(value = "/todos/{userid}", method = RequestMethod.GET)
     public String index(@PathVariable String userid, Model model) {
+        System.out.println(userid);
         String sql = "SELECT * FROM todo WHERE userid = " + userid;
         List<Todo> todos = jdbcTemplate.query(sql, new RowMapper<Todo>(){
             @Override
