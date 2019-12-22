@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Todos</title>
+</head>
+<body>
+    <h1>Todos</h1>
+    <div>
+        <div th:each="todo : ${todos}">
+            <form action="#" method="POST" th:action="@{'/todos/' + ${userid} + '/' + ${todo.id} + '/update'}">
+                <p th:utext="'ID: ' + ${todo.id}"></p>
+                <p th:utext="'Content: ' + ${todo.content}"></p>
+                <p th:utext="'Done: ' + (${todo.done} ? 'YES' : 'NO')"></p>
+                <button type="submit">Mark as done</button>
+            </form>
+        </div>
+    </div>
+    <div>
+        <a th:href="@{'/todos/' + ${userid} + '/create'}">new todo</a>
+    </div>
+    <form action="#" th:action="@{/logout}" method="POST">
+        <button type="submit">Logout</button>
+    </form>
+</body>
+</html>

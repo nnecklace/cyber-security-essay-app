@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - CyberSecurityBaseProjectApplication",
+            "request": "launch",
+            "mainClass": "sec.project.CyberSecurityBaseProjectApplication",
+            "projectName": "cybersecuritybase-project"
+        }
+    ]
+}
